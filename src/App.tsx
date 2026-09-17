@@ -43,14 +43,14 @@ const commandsData: Command[] = [
 - 常見的 3 個追問
 
 來回答我，並在最後給我一個該角色會用的檢查清單。` },
-  { id: 3, slash: "/cot_reasoning", title: "一步步思考邏輯推演", desc: "一步步思考邏輯推演", cat: 1, catName: "提問與指令調校", template: `請使用 Chain of Thought 逐步思考來解決以下問題，請不要直接給答案。
+  { id: 3, slash: "/cot_reasoning", title: "一步步思考邏輯推演", desc: "一步步思考邏輯推演", cat: 1, catName: "提問與指令調校", template: `請分析以下問題，提供關鍵解題步驟、判斷依據與可驗證摘要，不需揭露內部思考過程。
 
 問題：【貼上問題】
 
 請按此格式：
 1. 拆解問題的核心要素
 2. 列出已知與未知
-3. 每一步的推理與依據
+3. 關鍵解題步驟與可查證依據
 4. 可能的陷阱與反例
 5. 最終結論與信心指數（0-100%）
 6. 如果要驗證，你會怎麼做？` },
@@ -88,7 +88,7 @@ const commandsData: Command[] = [
 
 原文：【貼上原文】
 
-目標語氣：【例如：專業但不嚴肅 / 像蔡康永一樣溫暖犀利 / 17歲高中生在限動抱怨的口吻】
+目標語氣：【例如：溫暖、機智且一針見血 / 17歲高中生在限動抱怨的口吻】
 目標對象：【例如：給老闆看 / 給 Z 世代看】
 限制：【例如：300字內、不要用驚嘆號、要有幽默感】
 
@@ -109,10 +109,15 @@ const commandsData: Command[] = [
 內容：【貼上文章或論點】
 
 請輸出表格：
-| 段落 | 主張 | 邏輯問題 | 事實查核 | 建議修正 |
+| 段落 | 主張 | 邏輯問題 | 查核結果 | 來源與日期 | 建議修正 |
+
+查核規則：
+- 優先查找第一手、官方或具公信力的來源，附上可開啟的連結、發布或更新日期
+- 區分「已證實」「有爭議」「缺乏證據」「無法驗證」，不得把推測寫成事實
+- 如果無法連網或找不到可靠來源，明確標示「無法驗證」，不要自行補造資料或引用
 
 最後給我：
-- 整體可信度評分（0-100）
+- 整體可信度啟發式評分（0-100，並說明評分限制）
 - 3 個最需要補強的證據
 - 重寫後的可信版本（200字內）` },
   { id: 9, slash: "/summary_limit", title: "指定字數精準總結", desc: "指定字數精準總結", cat: 1, catName: "提問與指令調校", template: `請幫我把以下內容，總結成【請填：50字 / 100字 / 300字】的版本。
@@ -194,7 +199,7 @@ const commandsData: Command[] = [
 
 主題：【貼上】
 來賓：【例如：連續創業者】
-主持人風格：【例如：像吳淡如溫暖提問】
+主持人風格：【例如：溫暖、敏銳，擅長用追問引出真實故事】
 長度：【例如：30分鐘，約 4500 字】
 目標聽眾：【例如：想離職創業的上班族】
 
@@ -209,7 +214,7 @@ const commandsData: Command[] = [
 
 原文：【貼上】
 
-風格參考：【例如：像張西 / 像村上春樹 / 像李白但現代版】
+風格特徵：【例如：極簡留白、內斂孤寂、帶有日常魔幻感 / 古典意象搭配現代語彙】
 保留意思，但加入：
 - 1 個隱喻
 - 1 個五感描寫
@@ -226,7 +231,7 @@ const commandsData: Command[] = [
 1. 數字型 2. 痛點反轉型 3. 好奇缺口型 4. 反直覺型 5. 對比型
 6. 故事型 7. 權威背書型 8. 時效型 9. 提問型 10. 利益承諾型
 
-並標註每個標題的預估點擊力 1-10 分。` },
+並依標題結構進行 1-10 分的啟發式評分；這不是實際點擊率預測，請說明評分依據與限制。` },
   { id: 18, slash: "/clickbait_check", title: "檢查標題點擊力道", desc: "檢查標題點擊力道", cat: 2, catName: "內容創作與靈感", template: `請擔任標題優化師，幫我檢查這些標題的點擊力道。
 
 標題清單：
@@ -237,7 +242,7 @@ const commandsData: Command[] = [
 請用表格分析：
 | 標題 | 好奇缺口 | 利益點 | 情緒強度 | 過度標題黨風險 | 建議優化版 |
 
-最後選出 1 個最強標題，並說明為什麼它會爆。` },
+最後選出 1 個結構上最有潛力的標題，說明判斷依據；註明這是啟發式評估，實際成效仍需 A/B 測試。` },
   { id: 19, slash: "/content_repurpose", title: "長文轉多平台短影音", desc: "長文轉多平台短影音", cat: 2, catName: "內容創作與靈感", template: `請把這篇長文，拆解成多平台內容包。
 
 長文：【貼上】
@@ -400,17 +405,17 @@ const commandsData: Command[] = [
   { id: 31, slash: "/book_digest", title: "名著觀點精華濃縮", desc: "名著觀點精華濃縮", cat: 4, catName: "學習與知識吸收", template: `請幫我濃縮這本書的精華。
 
 書名：【貼上，例如：《快思慢想》】
-我已讀章節或筆記：【貼上，如果沒讀就寫「幫我總結整本」】
+我已讀章節或筆記：【貼上內容；若未提供原文，請明確告知】
 我想應用的場景：【例如：決策、寫作、投資】
 
 請輸出：
 1. 一句話總結這本書
-2. 3 個最顛覆的觀點（每個含原文例子）
+2. 3 個最顛覆的觀點（僅能引用我提供的內容；未提供原文時改用概念摘要並標示無法核對原文）
 3. 作者的核心模型圖（用文字描述）
 4. 我可以馬上用的 3 個行動
 5. 延伸閱讀 2 本
 
-300 字內講完，像朋友轉述。` },
+300 字內講完，像朋友轉述。不得虛構引文、頁碼、案例或作者主張；不確定的內容請明確標示。` },
   { id: 32, slash: "/concept_explain", title: "白話解釋艱深理論", desc: "白話解釋艱深理論", cat: 4, catName: "學習與知識吸收", template: `請用白話文解釋這個艱深理論。
 
 理論：【例如：賽局理論中的納許均衡】
@@ -936,7 +941,7 @@ const commandsData: Command[] = [
 5. 30 秒電梯簡報稿` },
   { id: 73, slash: "/threads_viral", title: "Threads爆款短文格式", desc: "Threads爆款短文格式", cat: 8, catName: "個人品牌與自媒體", template: `請幫我寫 Threads 爆款短文。
 
-主題：【例如：我用 100 個指令讓工作效率提升 3 倍】
+主題：【例如：我用 100 個指令減少重複輸入時間】
 目標：【例如：要高留言、導流到完整清單】
 語氣：【例如：像朋友分享祕密，不要像老師】
 
@@ -952,7 +957,7 @@ const commandsData: Command[] = [
 主題：【例如：100 個 ChatGPT 指令，我只推這 10 個】
 目標長度：【例如：12 分鐘】
 觀眾：【例如：剛開始用 ChatGPT 的新手】
-風格：【例如：像老高，懸念強】
+風格：【例如：懸念強、逐層揭露資訊，章節結尾留下追問】
 
 請輸出：
 1. 標題 3 選 1（高點擊）
@@ -988,7 +993,7 @@ const commandsData: Command[] = [
   { id: 77, slash: "/roast_my_profile", title: "以毒舌口吻點出粉專問題", desc: "以毒舌口吻點出粉專問題", cat: 8, catName: "個人品牌與自媒體", template: `請用毒舌但有建設性的口吻，幫我 roast 我的粉專 / 個人檔案。
 
 我的帳號：【貼上簡介、最近 5 篇貼文、數據】
-風格：【例如：像 Gordon Ramsay 點評，但最後會給愛】
+風格：【例如：直白犀利、節奏明快，但最後提供具體且鼓勵性的解法】
 
 請輸出：
 1. 3 個最致命的問題（不留情面）
@@ -1127,7 +1132,7 @@ const commandsData: Command[] = [
   { id: 88, slash: "/joke_teller", title: "幽默美式喜劇段子創作", desc: "幽默美式喜劇段子創作", cat: 9, catName: "生活、娛樂與探索", template: `請幫我寫一段幽默美式脫口秀段子。
 
 主題：【例如：用 ChatGPT 寫情書被抓包】
-風格：【例如：像賀瓏 / 像 Jimmy Fallon / 像地獄梗但溫和】
+風格：【例如：時事觀察型 / 輕快訪談型 / 黑色幽默但避免攻擊弱勢】
 長度：【例如：1 分鐘】
 對象：【例如：講給同事聽】
 
@@ -1176,7 +1181,7 @@ const commandsData: Command[] = [
 3. 重建新解法（從零開始會怎麼做）
 4. 用第一性原理推導出 3 個反直覺解法
 
-參考 Elon Musk 的思考方式，禁止用類比推理。` },
+聚焦物理、人性與數學等基本事實，禁止只靠類比推理。` },
   { id: 92, slash: "/second_thinking", title: "二階思考預測長遠後果", desc: "二階思考預測長遠後果", cat: 10, catName: "思考架構與心智模型", template: `請用二階思考幫我預測長遠後果。
 
 決策：【例如：全面導入 AI 取代 50% 客服】
@@ -1188,7 +1193,7 @@ const commandsData: Command[] = [
 4. 誰受益？誰受害？誰沒被考慮？
 5. 如果要做，如何設計護欄避免最壞二階後果
 
-用表格呈現，思維要像 Howard Marks。` },
+用表格呈現，強調風險、機率、連鎖效應與反向情境。` },
   { id: 93, slash: "/pre_mortem", title: "事前檢討法預防failure", desc: "事前檢討法預防failure", cat: 10, catName: "思考架構與心智模型", template: `請用 Pre-Mortem 事前驗屍法，假設專案已經失敗。
 
 專案：【例如：下個月要辦 300 人 AI 年會】
@@ -1361,6 +1366,10 @@ export default function App() {
     }
   };
 
+  const toggleExpanded = (id: number) => {
+    setExpandedId(currentId => currentId === id ? null : id);
+  };
+
   const isDark = theme === "dark";
 
   return (
@@ -1384,15 +1393,15 @@ export default function App() {
                     100個最好用的 ChatGPT 指令大全
                   </h1>
                 </div>
-                <p className={`mt-1.5 text-[13px] sm:text-[14px] ${isDark ? "text-zinc-400" : "text-zinc-500"} tracking-wide`}>
+                <p className={`mt-1.5 text-[13px] sm:text-[14px] ${isDark ? "text-zinc-300" : "text-zinc-600"} tracking-wide`}>
                   分類搜尋 · 一鍵複製 · 直接貼上就能用 <span className="hidden sm:inline">· Traditional Chinese</span>
                 </p>
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
-                <div className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-medium border ${isDark ? "bg-zinc-900 border-zinc-800 text-zinc-300" : "bg-white border-zinc-200 text-zinc-600 shadow-sm"}`}>
+                <div aria-live="polite" className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-medium border ${isDark ? "bg-zinc-900 border-zinc-800 text-zinc-300" : "bg-white border-zinc-200 text-zinc-600 shadow-sm"}`}>
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  {filtered.length} / 100 已載入
+                  顯示 {filtered.length} / 100 個指令
                 </div>
                 <button
                   onClick={() => setTheme(isDark ? "light" : "dark")}
@@ -1407,21 +1416,21 @@ export default function App() {
             {/* Search */}
             <div className="pb-4">
               <div className="relative group">
-                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[16px] opacity-60 group-focus-within:opacity-100 transition">⌕</div>
+                <div className={`absolute left-3.5 top-1/2 -translate-y-1/2 text-[16px] transition-colors ${isDark ? "text-zinc-300 group-focus-within:text-zinc-100" : "text-zinc-600 group-focus-within:text-zinc-900"}`}>⌕</div>
                 <input
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="搜尋指令、關鍵字、分類… 例如：/copywriter、商業信件、SEO"
                   className={`w-full pl-10 pr-4 py-3.5 rounded-2xl border text-[14px] sm:text-[15px] outline-none transition-all
                     ${isDark
-                      ? "bg-zinc-900 border-zinc-800 placeholder:text-zinc-500 focus:border-[#7c3aed]/50 focus:ring-4 focus:ring-[#7c3aed]/10"
-                      : "bg-white border-zinc-200 placeholder:text-zinc-400 shadow-[0_1px_2px_rgba(0,0,0,0.04)] focus:border-[#7c3aed]/40 focus:ring-4 focus:ring-[#7c3aed]/10"
+                      ? "bg-zinc-900 border-zinc-800 placeholder:text-zinc-400 focus:border-[#7c3aed]/50 focus:ring-4 focus:ring-[#7c3aed]/10"
+                      : "bg-white border-zinc-200 placeholder:text-zinc-600 shadow-[0_1px_2px_rgba(0,0,0,0.04)] focus:border-[#7c3aed]/40 focus:ring-4 focus:ring-[#7c3aed]/10"
                     }`}
                 />
                 {search && (
                   <button
                     onClick={() => setSearch("")}
-                    className={`absolute right-2 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full text-[12px] ${isDark ? "bg-zinc-800 text-zinc-400" : "bg-zinc-100 text-zinc-500"}`}
+                    className={`absolute right-2 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full text-[12px] ${isDark ? "bg-zinc-800 text-zinc-300" : "bg-zinc-100 text-zinc-600"}`}
                   >
                     清除
                   </button>
@@ -1430,11 +1439,11 @@ export default function App() {
 
               {/* Stats bar */}
               <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px]">
-                <div className={`px-2.5 py-1 rounded-full font-medium ${isDark ? "bg-zinc-900 text-zinc-300 border border-zinc-800" : "bg-zinc-900 text-white"}`}>
-                  篩選結果：{filtered.length} 個指令
-                </div>
-                <div className={`${isDark ? "text-zinc-500" : "text-zinc-500"}`}>
-                  {activeCat ? `分類 ${activeCat} · ${categories.find(c => c.id === activeCat)?.name}` : "全部 10 大分類 · 100 個精選"} · 點擊卡片可展開預覽
+                <h2 className={`px-2.5 py-1 rounded-full font-medium ${isDark ? "bg-zinc-900 text-zinc-300 border border-zinc-800" : "bg-zinc-900 text-white"}`}>
+                  顯示 {filtered.length} / 100 個指令
+                </h2>
+                <div className={`${isDark ? "text-zinc-300" : "text-zinc-600"}`}>
+                  {activeCat ? `分類 ${activeCat} · ${categories.find(c => c.id === activeCat)?.name}` : "全部 10 大分類 · 100 個精選"} · 使用展開按鈕查看完整模板
                 </div>
               </div>
             </div>
@@ -1450,7 +1459,7 @@ export default function App() {
                 className={`px-3.5 py-2 rounded-full text-[13px] font-medium border transition-all active:scale-[0.98]
                   ${!activeCat
                     ? "bg-[#7c3aed] text-white border-[#7c3aed] shadow-[0_4px_12px_rgba(124,58,237,0.3)]"
-                    : isDark ? "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200" : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
+                    : isDark ? "bg-zinc-900 border-zinc-700 text-zinc-200 hover:text-white" : "bg-white border-zinc-300 text-zinc-700 hover:bg-zinc-50"
                   }`}
               >
                 全部 100
@@ -1464,12 +1473,12 @@ export default function App() {
                     className={`px-3.5 py-2 rounded-full text-[13px] font-medium border transition-all active:scale-[0.98] flex items-center gap-1.5
                       ${isActive
                         ? "bg-[#7c3aed] text-white border-[#7c3aed] shadow-[0_4px_12px_rgba(124,58,237,0.3)]"
-                        : isDark ? "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200" : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
+                        : isDark ? "bg-zinc-900 border-zinc-700 text-zinc-200 hover:text-white" : "bg-white border-zinc-300 text-zinc-700 hover:bg-zinc-50"
                       }`}
                   >
                     <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold ${isActive ? "bg-white/20" : isDark ? "bg-zinc-800" : "bg-zinc-100"}`}>{cat.id}</span>
                     <span className="">{cat.name}</span>
-                    <span className={`text-[11px] ${isActive ? "text-white/70" : "opacity-60"}`}>{cat.range}</span>
+                    <span className={`text-[11px] ${isActive ? "text-white/90" : isDark ? "text-zinc-300" : "text-zinc-600"}`}>{cat.range}</span>
                   </button>
                 );
               })}
@@ -1483,7 +1492,7 @@ export default function App() {
             <div className={`rounded-[20px] border p-10 text-center ${isDark ? "bg-zinc-900 border-zinc-800" : "bg-white border-zinc-200"}`}>
               <div className="text-[32px] mb-2">🔍</div>
               <div className="font-medium">找不到符合的指令</div>
-              <div className={`text-[13px] mt-1 ${isDark ? "text-zinc-500" : "text-zinc-500"}`}>試試其他關鍵字，或清除篩選</div>
+              <div className={`text-[13px] mt-1 ${isDark ? "text-zinc-300" : "text-zinc-600"}`}>試試其他關鍵字，或清除篩選</div>
               <button onClick={() => { setSearch(""); setActiveCat(null); }} className="mt-4 px-4 py-2 rounded-full bg-[#7c3aed] text-white text-[13px] font-medium">清除全部篩選</button>
             </div>
           ) : (
@@ -1492,10 +1501,10 @@ export default function App() {
                 const isExpanded = expandedId === cmd.id;
                 const isCopied = copiedId === cmd.id;
                 return (
-                  <div
+                  <article
                     key={cmd.id}
-                    onClick={() => setExpandedId(isExpanded ? null : cmd.id)}
-                    className={`group relative flex flex-col rounded-[20px] border p-4 sm:p-5 transition-all cursor-pointer
+                    aria-labelledby={`prompt-title-${cmd.id}`}
+                    className={`group relative flex flex-col rounded-[20px] border p-4 sm:p-5 transition-all
                       ${isDark
                         ? `bg-zinc-900/70 border-zinc-800 hover:bg-zinc-900 hover:border-zinc-700 ${isExpanded ? "!border-[#7c3aed]/40 !bg-zinc-900" : ""}`
                         : `bg-white border-zinc-200 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:border-zinc-300 ${isExpanded ? "!border-[#7c3aed]/30 !shadow-[0_8px_24px_rgba(124,58,237,0.12)]" : ""}`
@@ -1511,17 +1520,18 @@ export default function App() {
                           <span className={`text-[11px] px-2 py-1 rounded-full font-medium ${isDark ? "bg-[#7c3aed]/15 text-[#a78bfa] border border-[#7c3aed]/20" : "bg-[#f5f0ff] text-[#7c3aed] border border-[#ede6ff]"}`}>
                             {cmd.cat} · {cmd.catName}
                           </span>
-                          <span className={`text-[11px] ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>#{cmd.id}</span>
+                          <span className={`text-[11px] ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>#{cmd.id}</span>
                         </div>
-                        <h3 className="mt-3 text-[15px] font-[700] leading-[1.35] tracking-tight line-clamp-2">
+                        <h3 id={`prompt-title-${cmd.id}`} className="mt-3 text-[15px] font-[700] leading-[1.35] tracking-tight line-clamp-2">
                           {cmd.title}
                         </h3>
-                        <p className={`mt-1 text-[13px] leading-[1.5] ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>
+                        <p className={`mt-1 text-[13px] leading-[1.5] ${isDark ? "text-zinc-300" : "text-zinc-600"}`}>
                           {cmd.desc}
                         </p>
                       </div>
                       <button
-                        onClick={(e) => { e.stopPropagation(); handleCopy(cmd); }}
+                        type="button"
+                        onClick={() => handleCopy(cmd)}
                         className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center border transition-all active:scale-90
                           ${isCopied
                             ? "bg-[#7c3aed] border-[#7c3aed] text-white shadow-[0_4px_12px_rgba(124,58,237,0.4)]"
@@ -1529,14 +1539,14 @@ export default function App() {
                               ? "bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700"
                               : "bg-zinc-900 text-white border-zinc-900 hover:bg-black shadow-sm"
                           }`}
-                        aria-label="複製"
+                        aria-label={`複製「${cmd.title}」模板`}
                       >
                         <span className="text-[14px]">{isCopied ? "✓" : "⧉"}</span>
                       </button>
                     </div>
 
                     {/* template preview */}
-                    <div className={`mt-4 rounded-[14px] border p-3.5 text-[12.5px] leading-[1.65] font-[450] whitespace-pre-wrap transition-all
+                    <div id={`prompt-template-${cmd.id}`} aria-labelledby={`prompt-title-${cmd.id}`} className={`mt-4 rounded-[14px] border p-3.5 text-[12.5px] leading-[1.65] font-[450] whitespace-pre-wrap transition-all
                       ${isDark ? "bg-[#101010] border-zinc-800 text-zinc-300" : "bg-[#fcfbfa] border-zinc-100 text-zinc-700"}
                       ${isExpanded ? "" : "line-clamp-[7] max-h-[168px] overflow-hidden relative"}
                     `}>
@@ -1547,11 +1557,18 @@ export default function App() {
                     </div>
 
                     <div className="mt-3 flex items-center justify-between">
-                      <div className={`text-[11px] ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>
-                        {isExpanded ? "點擊收合" : "點擊展開完整模板"}
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleExpanded(cmd.id)}
+                        aria-expanded={isExpanded}
+                        aria-controls={`prompt-template-${cmd.id}`}
+                        className={`relative z-10 inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed] focus-visible:ring-offset-2 ${isDark ? "text-zinc-300 hover:bg-zinc-800 focus-visible:ring-offset-zinc-900" : "text-zinc-600 hover:bg-zinc-100 focus-visible:ring-offset-white"}`}
+                      >
+                        <span aria-hidden="true">{isExpanded ? "−" : "+"}</span>
+                        {isExpanded ? "收合完整模板" : "展開完整模板"}
+                      </button>
                       <div className="flex items-center gap-1.5">
-                        <div className={`text-[11px] px-2 py-1 rounded-full ${isCopied ? "bg-emerald-500 text-white" : isDark ? "bg-zinc-800 text-zinc-400" : "bg-zinc-100 text-zinc-500"}`}>
+                        <div className={`text-[11px] px-2 py-1 rounded-full ${isCopied ? "bg-emerald-500 text-white" : isDark ? "bg-zinc-800 text-zinc-300" : "bg-zinc-100 text-zinc-600"}`}>
                           {isCopied ? "已複製" : "一鍵複製"}
                         </div>
                       </div>
@@ -1559,7 +1576,7 @@ export default function App() {
 
                     {/* accent glow */}
                     <div className={`pointer-events-none absolute -inset-px rounded-[20px] opacity-0 group-hover:opacity-100 transition duration-300 ${isDark ? "bg-gradient-to-b from-white/[0.04] to-transparent" : "bg-gradient-to-b from-zinc-900/[0.02] to-transparent"}`} />
-                  </div>
+                  </article>
                 );
               })}
             </div>
@@ -1570,11 +1587,11 @@ export default function App() {
               <div>
                 <div className="text-[14px] font-[700]">如何使用最有效？</div>
                 <div className={`mt-1 text-[13px] leading-[1.6] ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
-                  1. 先搜尋你的場景 → 2. 點擊卡片展開 → 3. 一鍵複製 → 4. 把【】替換成你的內容 → 5. 貼到 ChatGPT。<br />
-                  <span className="opacity-80">小技巧：把常用指令釘選在 ChatGPT 的自訂指令裡，效率提升 3 倍。</span>
+                  1. 先搜尋你的場景 → 2. 按下展開按鈕 → 3. 一鍵複製 → 4. 把【】替換成你的內容 → 5. 貼到 ChatGPT。<br />
+                  <span className="opacity-80">小技巧：把常用指令釘選在 ChatGPT 的自訂指令裡，可減少重複輸入時間。</span>
                 </div>
               </div>
-              <div className={`text-[11px] px-3 py-2 rounded-full border ${isDark ? "border-zinc-800 text-zinc-500" : "border-zinc-200 text-zinc-500 bg-zinc-50"}`}>
+              <div className={`text-[11px] px-3 py-2 rounded-full border ${isDark ? "border-zinc-700 text-zinc-300" : "border-zinc-300 text-zinc-600 bg-zinc-50"}`}>
                 Made for zh-TW · 100 prompts · Notion-like minimal
               </div>
             </div>

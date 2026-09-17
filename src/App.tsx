@@ -1444,10 +1444,10 @@ export default function App() {
         {/* Category chips sticky */}
         <div className={`sticky top-[93px] sm:top-[101px] z-30 backdrop-blur-xl border-b ${isDark ? "bg-[#0a0a0b]/80 border-zinc-800" : "bg-[#fbfaf8]/80 border-zinc-200"}`}>
           <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex gap-2 py-3 overflow-x-auto scrollbar-hide">
+            <div className="flex flex-wrap gap-2 py-3">
               <button
                 onClick={() => setActiveCat(null)}
-                className={`shrink-0 px-3.5 py-2 rounded-full text-[13px] font-medium border transition-all active:scale-[0.98]
+                className={`px-3.5 py-2 rounded-full text-[13px] font-medium border transition-all active:scale-[0.98]
                   ${!activeCat
                     ? "bg-[#7c3aed] text-white border-[#7c3aed] shadow-[0_4px_12px_rgba(124,58,237,0.3)]"
                     : isDark ? "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200" : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
@@ -1461,14 +1461,14 @@ export default function App() {
                   <button
                     key={cat.id}
                     onClick={() => setActiveCat(isActive ? null : cat.id)}
-                    className={`shrink-0 px-3.5 py-2 rounded-full text-[13px] font-medium border transition-all active:scale-[0.98] flex items-center gap-1.5
+                    className={`px-3.5 py-2 rounded-full text-[13px] font-medium border transition-all active:scale-[0.98] flex items-center gap-1.5
                       ${isActive
                         ? "bg-[#7c3aed] text-white border-[#7c3aed] shadow-[0_4px_12px_rgba(124,58,237,0.3)]"
                         : isDark ? "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200" : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
                       }`}
                   >
                     <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold ${isActive ? "bg-white/20" : isDark ? "bg-zinc-800" : "bg-zinc-100"}`}>{cat.id}</span>
-                    <span className="whitespace-nowrap">{cat.name}</span>
+                    <span className="">{cat.name}</span>
                     <span className={`text-[11px] ${isActive ? "text-white/70" : "opacity-60"}`}>{cat.range}</span>
                   </button>
                 );

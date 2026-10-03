@@ -1370,7 +1370,7 @@ export default function App() {
   // 讓 html 底色跟著主題，避免手機回彈捲動露出別的顏色
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", theme === "dark" ? "#000000" : "#e4efe0"));
+    document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", theme === "dark" ? "#000000" : "#ffffff"));
   }, [theme]);
 
   useEffect(() => {

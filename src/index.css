@@ -4,33 +4,34 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── 點菜單：淡綠道林紙＋單一印刷藍專色＋鉛筆灰 ── */
-/* 黑底：純黑紙、淡綠墨（預設） */
+/* ── 點菜單：單色印刷——黑底白字／白底黑字，鉛筆灰只留給使用者的記號 ── */
+/* 暗色：純黑底、白字（預設） */
 :root,
 [data-theme="dark"] {
   --paper: #000000;
-  --paper-deep: #141a14;
-  --ink: #d6ead1;
-  --ink-soft: #a9b8a4;
-  --pencil: #b3b3ab;
-  --rule: rgb(214 234 209 / 0.22);
-  --rule-strong: rgb(214 234 209 / 0.7);
+  --paper-deep: #111111;
+  --ink: #ffffff;
+  --ink-soft: #a1a1a1;
+  --pencil: #8a8a8a;
+  --rule: rgb(255 255 255 / 0.16);
+  --rule-strong: rgb(255 255 255 / 0.6);
   --on-ink: #000000;
   --font-text: 'Barlow', -apple-system, 'PingFang TC', 'Microsoft JhengHei', 'Heiti TC', sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   --font-display: 'Noto Sans TC', -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   color-scheme: dark;
 }
 
-/* 淺色：淡綠道林紙＋印刷藍（可用右上角按鈕切換） */
+/* 亮色：純白底、黑字（可用右上角按鈕切換） */
 [data-theme="light"] {
-  --paper: #e4efe0;
-  --paper-deep: #d5e5cf;
-  --ink: #1b3796;
-  --ink-soft: #4a5a96;
-  --pencil: #5b5a55;
-  --rule: rgb(27 55 150 / 0.28);
-  --rule-strong: rgb(27 55 150 / 0.75);
-  --on-ink: #e4efe0;
+  --paper: #ffffff;
+  --paper-deep: #f2f2f2;
+  --ink: #000000;
+  --ink-soft: #666666;
+  --pencil: #8a8a8a;
+  --rule: rgb(0 0 0 / 0.14);
+  --rule-strong: rgb(0 0 0 / 0.6);
+  --on-ink: #ffffff;
   color-scheme: light;
 }
 
@@ -196,7 +197,7 @@ button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 }
 .tab:hover { background: var(--paper-deep); }
 .tab[aria-pressed="true"] { background: var(--ink); color: var(--on-ink); position: relative; z-index: 1; }
-.tab-range { font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.tab-range { font-family: var(--font-mono); letter-spacing: 0.1em; font-size: 11px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .tab[aria-pressed="true"] .tab-range { color: var(--on-ink); opacity: 0.85; }
 @media (max-width: 639px) { .tab-range { display: none; } .tab:first-child .tab-range { display: none; } }
 
@@ -208,7 +209,10 @@ button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
   align-items: center;
   gap: 0 16px;
   padding: 10px 0 2px;
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
 }
@@ -248,9 +252,11 @@ button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .section-name { font-weight: 900; font-size: 18px; letter-spacing: 0.04em; line-height: 1.3; }
 .section-range {
   margin-left: auto;
-  font-family: var(--font-text);
-  font-size: 13px;
-  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
 }
@@ -306,7 +312,7 @@ button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
   line-height: 1.4;
 }
 .row-slash {
-  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 12.5px;
   color: var(--ink-soft);
   overflow: hidden;
@@ -421,9 +427,11 @@ button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
   margin: 14px 0 0;
   padding-top: 10px;
   border-top: 1px solid var(--rule);
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   color: var(--ink-soft);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 /* ── 提示單 ── */

@@ -2,21 +2,21 @@
 name: 100個最好用的 ChatGPT 指令大全
 description: 台式單色印刷點菜單：分區、編號、勾格即複製
 colors:
-  paper: "#e4efe0"
-  paper-deep: "#d5e5cf"
-  ink: "#1b3796"
-  ink-soft: "#4a5a96"
-  pencil: "#5b5a55"
-  rule: "rgb(27 55 150 / 0.28)"
-  rule-strong: "rgb(27 55 150 / 0.75)"
-  on-ink: "#e4efe0"
+  paper: "#ffffff"
+  paper-deep: "#f2f2f2"
+  ink: "#000000"
+  ink-soft: "#666666"
+  pencil: "#8a8a8a"
+  rule: "rgb(0 0 0 / 0.14)"
+  rule-strong: "rgb(0 0 0 / 0.6)"
+  on-ink: "#ffffff"
   reverse-paper: "#000000"
-  reverse-paper-deep: "#141a14"
-  reverse-ink: "#d6ead1"
-  reverse-ink-soft: "#a9b8a4"
-  reverse-pencil: "#b3b3ab"
-  reverse-rule: "rgb(214 234 209 / 0.22)"
-  reverse-rule-strong: "rgb(214 234 209 / 0.7)"
+  reverse-paper-deep: "#111111"
+  reverse-ink: "#ffffff"
+  reverse-ink-soft: "#a1a1a1"
+  reverse-pencil: "#8a8a8a"
+  reverse-rule: "rgb(255 255 255 / 0.16)"
+  reverse-rule-strong: "rgb(255 255 255 / 0.6)"
 typography:
   display:
     fontFamily: "'Noto Sans TC', -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-serif"
@@ -155,14 +155,14 @@ One spot ink on tinted paper, plus a pencil; dark mode swaps paper and ink rathe
 - **Hairline / Strong Rule** (rule, rule-strong): the ink at 28% and 75% alpha. Hairlines sit between rows; strong rules draw borders, frames and double rules.
 
 ### Black print (dark, the default)
-- Reverse Paper, Reverse Paper Deep, Reverse Ink, Reverse Ink Soft, Reverse Pencil and the two reverse rules take over the same roles under `data-theme="dark"` on `<html>`. In this theme on-ink equals reverse-paper. The `theme-color` metas follow the paper of the active theme (#e4efe0 / #000000). Dark is the default on first load regardless of the system setting; the header toggle switches to the light paper..
+- Reverse Paper, Reverse Paper Deep, Reverse Ink, Reverse Ink Soft, Reverse Pencil and the two reverse rules take over the same roles under `data-theme="dark"` on `<html>`. In this theme on-ink equals reverse-paper. The `theme-color` metas follow the paper of the active theme (#ffffff / #000000). Dark is the default on first load regardless of the system setting; the header toggle switches to the light paper..
 
 ### Named Rules
 **The One Spot Rule.** Ink is the only colour. Hierarchy comes from ink-soft, the rule alphas, weight and paper-deep, never from a second hue.
 
 **The Pencil Belongs to the Diner Rule.** Pencil grey marks only what the user did (copied, ticked, already ordered). It is never used for system chrome.
 
-**The Black Print Rule.** The default theme prints the pale-green ink on true black paper. Dark never turns into a grey or blue-black UI: paper is #000000 and the only lift is paper-deep (#141a14), a green-tinted near-black.
+**The Black Print Rule.** The default theme prints the pale-green ink on true black paper. Dark never turns into a grey or blue-black UI: paper is #000000 and the only lift is paper-deep (#111111), a green-tinted near-black.
 
 **The Inverse Error Rule.** A failure is shown as the same slip printed in reverse (ink fill, on-ink text) with plain words. No red.
 
@@ -188,7 +188,7 @@ One spot ink on tinted paper, plus a pencil; dark mode swaps paper and ink rathe
 
 **The 900-Only Display Rule.** Noto Sans TC is loaded at 900 alone. Display text is either 900 or set in the text stack, never at an intermediate Noto weight.
 
-**The Mono Is For Commands Rule.** Monospace appears only for slash command names.
+**The Mono Is For Labels Rule.** Monospace (uppercase, 0.1–0.12em tracking, 11–12px, ink-soft) is used for slash command names and small meta labels: section ranges, tab ranges, the tally and the colophon.
 
 ## Layout
 

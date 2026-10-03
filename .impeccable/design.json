@@ -106,8 +106,8 @@
       },
       "reverse-paper": {
         "role": "neutral",
-        "displayName": "Reverse Paper (dark)",
-        "canonical": "#172f80",
+        "displayName": "Black Paper (dark, default)",
+        "canonical": "#000000",
         "tonalRamp": [
           "#0c1841",
           "#152a72",
@@ -121,8 +121,8 @@
       },
       "reverse-paper-deep": {
         "role": "neutral",
-        "displayName": "Reverse Paper Deep (dark)",
-        "canonical": "#1d3789",
+        "displayName": "Black Paper Deep (dark)",
+        "canonical": "#141a14",
         "tonalRamp": [
           "#0d193f",
           "#182d6f",
@@ -152,7 +152,7 @@
       "reverse-ink-soft": {
         "role": "primary",
         "displayName": "Reverse Ink Soft (dark)",
-        "canonical": "#a9bbe3",
+        "canonical": "#a9b8a4",
         "tonalRamp": [
           "#131f3a",
           "#213666",
@@ -167,7 +167,7 @@
       "reverse-pencil": {
         "role": "neutral",
         "displayName": "Reverse Pencil (dark)",
-        "canonical": "#c4c3bb",
+        "canonical": "#b3b3ab",
         "tonalRamp": [
           "#292824",
           "#48473f",
@@ -345,8 +345,8 @@
         "section": "colors"
       },
       {
-        "name": "The Reverse Print Rule",
-        "body": "Dark mode inverts paper and ink. It does not introduce a neutral grey or black surface.",
+        "name": "The Black Print Rule",
+        "body": "The default theme prints the pale-green ink on true black paper (#000000). Dark never turns into a grey or blue-black UI; the only lift is paper-deep (#141a14).",
         "section": "colors"
       },
       {

@@ -5,7 +5,23 @@
 @tailwind utilities;
 
 /* ── 點菜單：淡綠道林紙＋單一印刷藍專色＋鉛筆灰 ── */
+/* 黑底：純黑紙、淡綠墨（預設） */
 :root,
+[data-theme="dark"] {
+  --paper: #000000;
+  --paper-deep: #141a14;
+  --ink: #d6ead1;
+  --ink-soft: #a9b8a4;
+  --pencil: #b3b3ab;
+  --rule: rgb(214 234 209 / 0.22);
+  --rule-strong: rgb(214 234 209 / 0.7);
+  --on-ink: #000000;
+  --font-text: 'Barlow', -apple-system, 'PingFang TC', 'Microsoft JhengHei', 'Heiti TC', sans-serif;
+  --font-display: 'Noto Sans TC', -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  color-scheme: dark;
+}
+
+/* 淺色：淡綠道林紙＋印刷藍（可用右上角按鈕切換） */
 [data-theme="light"] {
   --paper: #e4efe0;
   --paper-deep: #d5e5cf;
@@ -15,22 +31,7 @@
   --rule: rgb(27 55 150 / 0.28);
   --rule-strong: rgb(27 55 150 / 0.75);
   --on-ink: #e4efe0;
-  --font-text: 'Barlow', -apple-system, 'PingFang TC', 'Microsoft JhengHei', 'Heiti TC', sans-serif;
-  --font-display: 'Noto Sans TC', -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   color-scheme: light;
-}
-
-/* 深色＝反印：深藍紙、淡綠墨 */
-[data-theme="dark"] {
-  --paper: #172f80;
-  --paper-deep: #1d3789;
-  --ink: #d6ead1;
-  --ink-soft: #a9bbe3;
-  --pencil: #c4c3bb;
-  --rule: rgb(214 234 209 / 0.22);
-  --rule-strong: rgb(214 234 209 / 0.7);
-  --on-ink: #172f80;
-  color-scheme: dark;
 }
 
 html { background: var(--paper); scrollbar-color: var(--rule-strong) var(--paper); }

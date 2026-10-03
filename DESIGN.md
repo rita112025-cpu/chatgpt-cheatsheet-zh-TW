@@ -10,11 +10,11 @@ colors:
   rule: "rgb(27 55 150 / 0.28)"
   rule-strong: "rgb(27 55 150 / 0.75)"
   on-ink: "#e4efe0"
-  reverse-paper: "#172f80"
-  reverse-paper-deep: "#1d3789"
+  reverse-paper: "#000000"
+  reverse-paper-deep: "#141a14"
   reverse-ink: "#d6ead1"
-  reverse-ink-soft: "#a9bbe3"
-  reverse-pencil: "#c4c3bb"
+  reverse-ink-soft: "#a9b8a4"
+  reverse-pencil: "#b3b3ab"
   reverse-rule: "rgb(214 234 209 / 0.22)"
   reverse-rule-strong: "rgb(214 234 209 / 0.7)"
 typography:
@@ -154,15 +154,15 @@ One spot ink on tinted paper, plus a pencil; dark mode swaps paper and ink rathe
 - **Pencil Grey** (pencil): only the user's own marks, meaning the tick in a copied box, the hand-drawn circle round a copied row number, and the "已點過" tally.
 - **Hairline / Strong Rule** (rule, rule-strong): the ink at 28% and 75% alpha. Hairlines sit between rows; strong rules draw borders, frames and double rules.
 
-### Reverse print (dark)
-- Reverse Paper, Reverse Paper Deep, Reverse Ink, Reverse Ink Soft, Reverse Pencil and the two reverse rules take over the same roles under `data-theme="dark"` on `<html>`. In this theme on-ink equals reverse-paper. The `theme-color` metas follow the paper of the active theme (#e4efe0 / #172f80).
+### Black print (dark, the default)
+- Reverse Paper, Reverse Paper Deep, Reverse Ink, Reverse Ink Soft, Reverse Pencil and the two reverse rules take over the same roles under `data-theme="dark"` on `<html>`. In this theme on-ink equals reverse-paper. The `theme-color` metas follow the paper of the active theme (#e4efe0 / #000000). Dark is the default on first load regardless of the system setting; the header toggle switches to the light paper..
 
 ### Named Rules
 **The One Spot Rule.** Ink is the only colour. Hierarchy comes from ink-soft, the rule alphas, weight and paper-deep, never from a second hue.
 
 **The Pencil Belongs to the Diner Rule.** Pencil grey marks only what the user did (copied, ticked, already ordered). It is never used for system chrome.
 
-**The Reverse Print Rule.** Dark mode inverts paper and ink. It does not introduce a neutral grey or black surface.
+**The Black Print Rule.** The default theme prints the pale-green ink on true black paper. Dark never turns into a grey or blue-black UI: paper is #000000 and the only lift is paper-deep (#141a14), a green-tinted near-black.
 
 **The Inverse Error Rule.** A failure is shown as the same slip printed in reverse (ink fill, on-ink text) with plain words. No red.
 

@@ -1349,7 +1349,7 @@ const Icon = {
 export default function App() {
   const [search, setSearch] = useState("");
   const [activeCat, setActiveCat] = useState<number | null>(null);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [toast, setToast] = useState<{ msg: string; hint: string; ok: boolean } | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
@@ -1367,15 +1367,10 @@ export default function App() {
   const listRef = useRef<HTMLElement>(null);
   const toastTimer = useRef<number>();
 
-  useEffect(() => {
-    const m = window.matchMedia("(prefers-color-scheme: dark)");
-    setTheme(m.matches ? "dark" : "light");
-  }, []);
-
   // 讓 html 底色跟著主題，避免手機回彈捲動露出別的顏色
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", theme === "dark" ? "#172f80" : "#e4efe0"));
+    document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", theme === "dark" ? "#000000" : "#e4efe0"));
   }, [theme]);
 
   useEffect(() => {

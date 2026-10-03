@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, type KeyboardEvent } from 'react';
 
 type Command = {
   id: number;
@@ -1304,44 +1304,150 @@ R - Reverse 翻轉
 最後給我綜合洞察。` },
 ];
 
+const CN_NUM = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+const COPIED_KEY = "cheatsheet-copied-ids";
+
+// 【】是要替換的地方，印成填空框
+function renderTemplate(text: string) {
+  return text.split(/(【[^】]*】)/g).map((part, i) =>
+    part.startsWith("【") && part.endsWith("】")
+      ? <span key={i} className="blank">{part}</span>
+      : part
+  );
+}
+
+const Icon = {
+  search: (
+    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <circle cx="8.5" cy="8.5" r="5.5" /><path d="M12.6 12.6 17 17" strokeLinecap="square" />
+    </svg>
+  ),
+  copy: (
+    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <rect x="6.5" y="6.5" width="9" height="10" /><path d="M4 13.5V3.5h8.5" />
+    </svg>
+  ),
+  // 鉛筆勾記：刻意不對稱，像手寫
+  tick: (
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4.5 12.8c1.6 1.2 3 2.9 4.1 5.2 2.4-5.6 6-9.9 11.2-13.4" />
+    </svg>
+  ),
+  sun: (
+    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <circle cx="10" cy="10" r="3.6" />
+      <path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M4.2 15.8l1.7-1.7M14.1 5.9l1.7-1.7" strokeLinecap="square" />
+    </svg>
+  ),
+  moon: (
+    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <path d="M15.8 12.6A6.6 6.6 0 0 1 7.4 4.2a6.6 6.6 0 1 0 8.4 8.4Z" />
+    </svg>
+  ),
+};
+
 export default function App() {
   const [search, setSearch] = useState("");
   const [activeCat, setActiveCat] = useState<number | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [copiedId, setCopiedId] = useState<number | null>(null);
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ msg: string; hint: string; ok: boolean } | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [copiedIds, setCopiedIds] = useState<number[]>(() => {
+    try {
+      const raw = localStorage.getItem(COPIED_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed.filter((n): n is number => typeof n === "number") : [];
+    } catch {
+      return [];
+    }
+  });
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const chipsRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLElement>(null);
+  const toastTimer = useRef<number>();
 
   useEffect(() => {
     const m = window.matchMedia("(prefers-color-scheme: dark)");
     setTheme(m.matches ? "dark" : "light");
   }, []);
 
+  // 讓 html 底色跟著主題，避免手機回彈捲動露出別的顏色
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", theme === "dark" ? "#172f80" : "#e4efe0"));
+  }, [theme]);
+
+  useEffect(() => {
+    try { localStorage.setItem(COPIED_KEY, JSON.stringify(copiedIds)); } catch { /* 無痕模式等情況，忽略 */ }
+  }, [copiedIds]);
+
+  // 手機版分類列為橫向捲動：選取後把該分類捲到中間
+  useEffect(() => {
+    const row = chipsRef.current;
+    const chip = row?.querySelector<HTMLElement>(`[data-cat="${activeCat ?? 0}"]`);
+    if (!row || !chip || row.scrollWidth <= row.clientWidth) return;
+    row.scrollLeft = chip.offsetLeft - (row.clientWidth - chip.offsetWidth) / 2;
+  }, [activeCat]);
+
+  // 切換分類或搜尋時，若已往下捲，回到清單頂端
+  const scrollToListTop = () => {
+    // 等清單重新渲染（高度改變）後再捲動
+    requestAnimationFrame(() => {
+      const list = listRef.current;
+      if (!list) return;
+      const stickyH = stickyRef.current?.offsetHeight ?? 0;
+      const y = list.getBoundingClientRect().top + window.scrollY - stickyH - 8;
+      if (window.scrollY > y) window.scrollTo({ top: y });
+    });
+  };
+
+  const selectCat = (id: number | null) => {
+    setActiveCat(id);
+    scrollToListTop();
+  };
+
+  const query = search.trim().toLowerCase();
+  // 只輸入數字＝直接找編號
+  const jumpId = /^\d{1,3}$/.test(query) && +query >= 1 && +query <= commandsData.length ? +query : null;
+
   const filtered = useMemo(() => {
     return commandsData.filter(c => {
       const matchCat = activeCat ? c.cat === activeCat : true;
-      const q = search.trim().toLowerCase();
-      if (!q) return matchCat;
+      if (!query) return matchCat;
+      if (jumpId) return c.id === jumpId;
       return matchCat && (
-        c.slash.toLowerCase().includes(q) ||
-        c.title.toLowerCase().includes(q) ||
-        c.desc.toLowerCase().includes(q) ||
-        c.template.toLowerCase().includes(q) ||
-        c.catName.toLowerCase().includes(q)
+        c.slash.toLowerCase().includes(query) ||
+        c.title.toLowerCase().includes(query) ||
+        c.desc.toLowerCase().includes(query) ||
+        c.template.toLowerCase().includes(query) ||
+        c.catName.toLowerCase().includes(query)
       );
     });
-  }, [search, activeCat]);
+  }, [query, jumpId, activeCat]);
+
+  const sections = useMemo(() => {
+    return categories
+      .map(cat => ({ cat, items: filtered.filter(c => c.cat === cat.id) }))
+      .filter(s => s.items.length > 0);
+  }, [filtered]);
+
+  const showToast = (t: { msg: string; hint: string; ok: boolean }, ms: number) => {
+    window.clearTimeout(toastTimer.current);
+    setToast(t);
+    toastTimer.current = window.setTimeout(() => setToast(null), ms);
+  };
 
   const handleCopy = async (cmd: Command) => {
     const showSuccess = () => {
       setCopiedId(cmd.id);
-      setToast(`已複製 ${cmd.slash}`);
-      setTimeout(() => setCopiedId(null), 1800);
-      setTimeout(() => setToast(null), 2200);
+      setCopiedIds(ids => ids.includes(cmd.id) ? ids : [...ids, cmd.id]);
+      showToast({ msg: `已複製 ${cmd.slash}`, hint: "到 ChatGPT 貼上，再把【】換成你的內容", ok: true }, 2600);
+      setTimeout(() => setCopiedId(current => current === cmd.id ? null : current), 1800);
     };
     const showFail = () => {
-      setToast(`複製失敗，請手動選取`);
-      setTimeout(() => setToast(null), 2500);
+      showToast({ msg: "複製失敗", hint: "已展開模板，請手動選取文字後複製", ok: false }, 4000);
+      setExpandedId(cmd.id);
     };
     try {
       await navigator.clipboard.writeText(cmd.template);
@@ -1367,266 +1473,210 @@ export default function App() {
   };
 
   const toggleExpanded = (id: number) => {
-    setExpandedId(currentId => currentId === id ? null : id);
+    const collapsing = expandedId === id;
+    setExpandedId(collapsing ? null : id);
+    // 收合長模板後，該行可能已捲出畫面，拉回來避免迷路
+    if (collapsing) {
+      requestAnimationFrame(() => {
+        const row = document.getElementById(`prompt-row-${id}`);
+        const stickyH = stickyRef.current?.offsetHeight ?? 0;
+        if (row && row.getBoundingClientRect().top < stickyH) {
+          window.scrollTo({ top: row.getBoundingClientRect().top + window.scrollY - stickyH - 12 });
+        }
+      });
+    }
+  };
+
+  // 只剩一筆時按 Enter 直接展開
+  const onSearchKey = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter") return;
+    e.currentTarget.blur();
+    if (filtered.length !== 1) return;
+    const id = filtered[0].id;
+    setExpandedId(id);
+    requestAnimationFrame(() => document.querySelector<HTMLButtonElement>(`#prompt-row-${id} .row-main`)?.focus());
   };
 
   const isDark = theme === "dark";
+  const activeCategory = activeCat ? categories.find(c => c.id === activeCat) : null;
 
   return (
-    <div className={isDark ? "dark" : ""}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap');
-        * { font-family: 'Inter', 'Noto Sans TC', -apple-system, sans-serif; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
+    <div className="menu" data-theme={theme}>
+      {/* 店招 */}
+      <header className="wrap masthead">
+        <div className="seal" aria-hidden="true">
+          <span className="seal-num">100</span>
+          <span className="seal-unit">道</span>
+        </div>
+        <div className="min-w-0 flex-1">
+          <h1 className="title">
+            <span className="whitespace-nowrap">100個最好用的</span> <span className="whitespace-nowrap">ChatGPT 指令大全</span>
+          </h1>
+          <p className="subtitle">分類搜尋 · 一鍵複製 · 直接貼上就能用</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setTheme(isDark ? "light" : "dark")}
+          className="icon-btn"
+          aria-label={isDark ? "切換為淺色" : "切換為深色"}
+        >
+          {isDark ? Icon.sun : Icon.moon}
+        </button>
+      </header>
 
-      <div className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-[#0a0a0b] text-zinc-100" : "bg-[#fbfaf8] text-zinc-900"}`}>
-        {/* Header */}
-        <header className={`sticky top-0 z-40 backdrop-blur-xl border-b ${isDark ? "bg-[#0a0a0b]/80 border-zinc-800" : "bg-[#fbfaf8]/80 border-zinc-200"}`}>
-          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between py-4 sm:py-5 gap-4">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-[#7c3aed] flex items-center justify-center text-white font-bold text-[15px] shadow-[0_4px_12px_rgba(124,58,237,0.35)]">100</div>
-                  <h1 className="text-[18px] sm:text-[20px] font-[700] tracking-tight leading-none truncate">
-                    100個最好用的 ChatGPT 指令大全
-                  </h1>
-                </div>
-                <p className={`mt-1.5 text-[13px] sm:text-[14px] ${isDark ? "text-zinc-300" : "text-zinc-600"} tracking-wide`}>
-                  分類搜尋 · 一鍵複製 · 直接貼上就能用 <span className="hidden sm:inline">· Traditional Chinese</span>
-                </p>
-              </div>
+      {/* 搜尋 + 分區索引：一起固定在頂端 */}
+      <div ref={stickyRef} className="bar">
+        <div className="wrap">
+          <label className="search">
+            <span className="search-icon">{Icon.search}</span>
+            <input
+              type="search"
+              enterKeyHint="search"
+              aria-label="搜尋指令，或輸入編號"
+              value={search}
+              onChange={e => { setSearch(e.target.value); scrollToListTop(); }}
+              onKeyDown={onSearchKey}
+              placeholder="搜尋指令，或輸入編號 1–100"
+            />
+            {search && (
+              <button type="button" className="search-clear" onClick={() => setSearch("")}>清除</button>
+            )}
+          </label>
 
-              <div className="flex items-center gap-2 shrink-0">
-                <div aria-live="polite" className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-medium border ${isDark ? "bg-zinc-900 border-zinc-800 text-zinc-300" : "bg-white border-zinc-200 text-zinc-600 shadow-sm"}`}>
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  顯示 {filtered.length} / 100 個指令
-                </div>
-                <button
-                  onClick={() => setTheme(isDark ? "light" : "dark")}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all active:scale-95 ${isDark ? "bg-zinc-900 border-zinc-800 hover:bg-zinc-800" : "bg-white border-zinc-200 hover:bg-zinc-50 shadow-sm"}`}
-                  aria-label="切換主題"
-                >
-                  <span className="text-[16px]">{isDark ? "☀️" : "🌙"}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Search */}
-            <div className="pb-4">
-              <div className="relative group">
-                <div className={`absolute left-3.5 top-1/2 -translate-y-1/2 text-[16px] transition-colors ${isDark ? "text-zinc-300 group-focus-within:text-zinc-100" : "text-zinc-600 group-focus-within:text-zinc-900"}`}>⌕</div>
-                <input
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  placeholder="搜尋指令、關鍵字、分類… 例如：/copywriter、商業信件、SEO"
-                  className={`w-full pl-10 pr-4 py-3.5 rounded-2xl border text-[14px] sm:text-[15px] outline-none transition-all
-                    ${isDark
-                      ? "bg-zinc-900 border-zinc-800 placeholder:text-zinc-400 focus:border-[#7c3aed]/50 focus:ring-4 focus:ring-[#7c3aed]/10"
-                      : "bg-white border-zinc-200 placeholder:text-zinc-600 shadow-[0_1px_2px_rgba(0,0,0,0.04)] focus:border-[#7c3aed]/40 focus:ring-4 focus:ring-[#7c3aed]/10"
-                    }`}
-                />
-                {search && (
-                  <button
-                    onClick={() => setSearch("")}
-                    className={`absolute right-2 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full text-[12px] ${isDark ? "bg-zinc-800 text-zinc-300" : "bg-zinc-100 text-zinc-600"}`}
-                  >
-                    清除
-                  </button>
-                )}
-              </div>
-
-              {/* Stats bar */}
-              <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px]">
-                <h2 className={`px-2.5 py-1 rounded-full font-medium ${isDark ? "bg-zinc-900 text-zinc-300 border border-zinc-800" : "bg-zinc-900 text-white"}`}>
-                  顯示 {filtered.length} / 100 個指令
-                </h2>
-                <div className={`${isDark ? "text-zinc-300" : "text-zinc-600"}`}>
-                  {activeCat ? `分類 ${activeCat} · ${categories.find(c => c.id === activeCat)?.name}` : "全部 10 大分類 · 100 個精選"} · 使用展開按鈕查看完整模板
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Category chips sticky */}
-        <div className={`sticky top-[93px] sm:top-[101px] z-30 backdrop-blur-xl border-b ${isDark ? "bg-[#0a0a0b]/80 border-zinc-800" : "bg-[#fbfaf8]/80 border-zinc-200"}`}>
-          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-wrap gap-2 py-3">
-              <button
-                onClick={() => setActiveCat(null)}
-                className={`px-3.5 py-2 rounded-full text-[13px] font-medium border transition-all active:scale-[0.98]
-                  ${!activeCat
-                    ? "bg-[#7c3aed] text-white border-[#7c3aed] shadow-[0_4px_12px_rgba(124,58,237,0.3)]"
-                    : isDark ? "bg-zinc-900 border-zinc-700 text-zinc-200 hover:text-white" : "bg-white border-zinc-300 text-zinc-700 hover:bg-zinc-50"
-                  }`}
-              >
-                全部 100
+          <nav aria-label="分類" className="index-wrap">
+            <div ref={chipsRef} className="index scrollbar-hide">
+              <button type="button" data-cat={0} aria-pressed={!activeCat} onClick={() => selectCat(null)} className="tab">
+                <span className="tab-name">全部</span>
+                <span className="tab-range">1–100</span>
               </button>
-              {categories.map(cat => {
-                const isActive = activeCat === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveCat(isActive ? null : cat.id)}
-                    className={`px-3.5 py-2 rounded-full text-[13px] font-medium border transition-all active:scale-[0.98] flex items-center gap-1.5
-                      ${isActive
-                        ? "bg-[#7c3aed] text-white border-[#7c3aed] shadow-[0_4px_12px_rgba(124,58,237,0.3)]"
-                        : isDark ? "bg-zinc-900 border-zinc-700 text-zinc-200 hover:text-white" : "bg-white border-zinc-300 text-zinc-700 hover:bg-zinc-50"
-                      }`}
-                  >
-                    <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold ${isActive ? "bg-white/20" : isDark ? "bg-zinc-800" : "bg-zinc-100"}`}>{cat.id}</span>
-                    <span className="">{cat.name}</span>
-                    <span className={`text-[11px] ${isActive ? "text-white/90" : isDark ? "text-zinc-300" : "text-zinc-600"}`}>{cat.range}</span>
-                  </button>
-                );
-              })}
+              {categories.map(cat => (
+                <button
+                  type="button"
+                  key={cat.id}
+                  data-cat={cat.id}
+                  aria-pressed={activeCat === cat.id}
+                  onClick={() => selectCat(activeCat === cat.id ? null : cat.id)}
+                  className="tab"
+                >
+                  <span className="tab-name">{cat.name}</span>
+                  <span className="tab-range">{cat.range}</span>
+                </button>
+              ))}
             </div>
-          </div>
+          </nav>
         </div>
+      </div>
 
-        {/* Main grid */}
-        <main className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          {filtered.length === 0 ? (
-            <div className={`rounded-[20px] border p-10 text-center ${isDark ? "bg-zinc-900 border-zinc-800" : "bg-white border-zinc-200"}`}>
-              <div className="text-[32px] mb-2">🔍</div>
-              <div className="font-medium">找不到符合的指令</div>
-              <div className={`text-[13px] mt-1 ${isDark ? "text-zinc-300" : "text-zinc-600"}`}>試試其他關鍵字，或清除篩選</div>
-              <button onClick={() => { setSearch(""); setActiveCat(null); }} className="mt-4 px-4 py-2 rounded-full bg-[#7c3aed] text-white text-[13px] font-medium">清除全部篩選</button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 auto-rows-fr">
-              {filtered.map(cmd => {
-                const isExpanded = expandedId === cmd.id;
-                const isCopied = copiedId === cmd.id;
-                return (
-                  <article
-                    key={cmd.id}
-                    aria-labelledby={`prompt-title-${cmd.id}`}
-                    className={`group relative flex flex-col rounded-[20px] border p-4 sm:p-5 transition-all
-                      ${isDark
-                        ? `bg-zinc-900/70 border-zinc-800 hover:bg-zinc-900 hover:border-zinc-700 ${isExpanded ? "!border-[#7c3aed]/40 !bg-zinc-900" : ""}`
-                        : `bg-white border-zinc-200 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:border-zinc-300 ${isExpanded ? "!border-[#7c3aed]/30 !shadow-[0_8px_24px_rgba(124,58,237,0.12)]" : ""}`
-                      }`}
-                  >
-                    {/* top */}
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className={`px-2.5 py-1 rounded-full text-[11px] font-mono font-[600] tracking-tight border ${isDark ? "bg-zinc-800 border-zinc-700 text-zinc-200" : "bg-zinc-900 text-white border-zinc-900"}`}>
-                            {cmd.slash}
-                          </span>
-                          <span className={`text-[11px] px-2 py-1 rounded-full font-medium ${isDark ? "bg-[#7c3aed]/15 text-[#a78bfa] border border-[#7c3aed]/20" : "bg-[#f5f0ff] text-[#7c3aed] border border-[#ede6ff]"}`}>
-                            {cmd.cat} · {cmd.catName}
-                          </span>
-                          <span className={`text-[11px] ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>#{cmd.id}</span>
-                        </div>
-                        <h3 id={`prompt-title-${cmd.id}`} className="mt-3 text-[15px] font-[700] leading-[1.35] tracking-tight line-clamp-2">
-                          {cmd.title}
-                        </h3>
-                        <p className={`mt-1 text-[13px] leading-[1.5] ${isDark ? "text-zinc-300" : "text-zinc-600"}`}>
-                          {cmd.desc}
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleCopy(cmd)}
-                        className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center border transition-all active:scale-90
-                          ${isCopied
-                            ? "bg-[#7c3aed] border-[#7c3aed] text-white shadow-[0_4px_12px_rgba(124,58,237,0.4)]"
-                            : isDark
-                              ? "bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700"
-                              : "bg-zinc-900 text-white border-zinc-900 hover:bg-black shadow-sm"
-                          }`}
-                        aria-label={`複製「${cmd.title}」模板`}
-                      >
-                        <span className="text-[14px]">{isCopied ? "✓" : "⧉"}</span>
-                      </button>
-                    </div>
-
-                    {/* template preview */}
-                    <div id={`prompt-template-${cmd.id}`} aria-labelledby={`prompt-title-${cmd.id}`} className={`mt-4 rounded-[14px] border p-3.5 text-[12.5px] leading-[1.65] font-[450] whitespace-pre-wrap transition-all
-                      ${isDark ? "bg-[#101010] border-zinc-800 text-zinc-300" : "bg-[#fcfbfa] border-zinc-100 text-zinc-700"}
-                      ${isExpanded ? "" : "line-clamp-[7] max-h-[168px] overflow-hidden relative"}
-                    `}>
-                      {!isExpanded && (
-                        <div className={`absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t ${isDark ? "from-[#101010] to-transparent" : "from-[#fcfbfa] to-transparent"} pointer-events-none rounded-b-[14px]`} />
-                      )}
-                      {cmd.template}
-                    </div>
-
-                    <div className="mt-3 flex items-center justify-between">
-                      <button
-                        type="button"
-                        onClick={() => toggleExpanded(cmd.id)}
-                        aria-expanded={isExpanded}
-                        aria-controls={`prompt-template-${cmd.id}`}
-                        className={`relative z-10 inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed] focus-visible:ring-offset-2 ${isDark ? "text-zinc-300 hover:bg-zinc-800 focus-visible:ring-offset-zinc-900" : "text-zinc-600 hover:bg-zinc-100 focus-visible:ring-offset-white"}`}
-                      >
-                        <span aria-hidden="true">{isExpanded ? "−" : "+"}</span>
-                        {isExpanded ? "收合完整模板" : "展開完整模板"}
-                      </button>
-                      <div className="flex items-center gap-1.5">
-                        <div className={`text-[11px] px-2 py-1 rounded-full ${isCopied ? "bg-emerald-500 text-white" : isDark ? "bg-zinc-800 text-zinc-300" : "bg-zinc-100 text-zinc-600"}`}>
-                          {isCopied ? "已複製" : "一鍵複製"}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* accent glow */}
-                    <div className={`pointer-events-none absolute -inset-px rounded-[20px] opacity-0 group-hover:opacity-100 transition duration-300 ${isDark ? "bg-gradient-to-b from-white/[0.04] to-transparent" : "bg-gradient-to-b from-zinc-900/[0.02] to-transparent"}`} />
-                  </article>
-                );
-              })}
-            </div>
-          )}
-
-          <div className={`mt-10 rounded-[20px] border p-6 sm:p-7 ${isDark ? "bg-zinc-900 border-zinc-800" : "bg-white border-zinc-200 shadow-sm"}`}>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <div className="text-[14px] font-[700]">如何使用最有效？</div>
-                <div className={`mt-1 text-[13px] leading-[1.6] ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
-                  1. 先搜尋你的場景 → 2. 按下展開按鈕 → 3. 一鍵複製 → 4. 把【】替換成你的內容 → 5. 貼到 ChatGPT。<br />
-                  <span className="opacity-80">小技巧：把常用指令釘選在 ChatGPT 的自訂指令裡，可減少重複輸入時間。</span>
-                </div>
-              </div>
-              <div className={`text-[11px] px-3 py-2 rounded-full border ${isDark ? "border-zinc-700 text-zinc-300" : "border-zinc-300 text-zinc-600 bg-zinc-50"}`}>
-                Made for zh-TW · 100 prompts · Notion-like minimal
-              </div>
-            </div>
-          </div>
-        </main>
-
-        {/* Toast */}
-        <div className="pointer-events-none fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2">
-          {toast && (
-            <div className="pointer-events-auto px-4 py-2.5 rounded-full bg-zinc-900 text-white text-[13px] font-medium shadow-[0_8px_24px_rgba(0,0,0,0.2)] flex items-center gap-2 animate-[slideUp_0.35s_cubic-bezier(0.16,1,0.3,1)]">
-              <span className="w-5 h-5 rounded-full bg-[#7c3aed] flex items-center justify-center text-[12px]">✓</span>
-              {toast}
-              <span className="opacity-60 ml-1">已複製到剪貼簿</span>
-            </div>
+      <main ref={listRef} className="wrap sheet-wrap">
+        <div className="tally" aria-live="polite">
+          <span>
+            {jumpId
+              ? `第 ${jumpId} 道`
+              : `${activeCategory ? activeCategory.name : "全部 10 大分類"} · 顯示 ${filtered.length} / 100 個指令`}
+          </span>
+          {copiedIds.length > 0 && (
+            <span className="tally-copied">
+              已點 {copiedIds.length} 道
+              <button type="button" onClick={() => setCopiedIds([])}>清除紀錄</button>
+            </span>
           )}
         </div>
 
-        <style>{`
-          @keyframes slideUp {
-            from { transform: translateY(12px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-          }
-          .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-          .line-clamp-\[7\] {
-            display: -webkit-box;
-            -webkit-line-clamp: 7;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-        `}</style>
+        {filtered.length === 0 ? (
+          <div className="empty">
+            <p className="empty-title">找不到符合的指令</p>
+            <p className="empty-text">試試其他關鍵字，或清除篩選</p>
+            <button type="button" className="btn-ink" onClick={() => { setSearch(""); setActiveCat(null); }}>清除全部篩選</button>
+          </div>
+        ) : (
+          <div className={`sheet ${expandedId && filtered.some(c => c.id === expandedId) ? "has-focus" : ""}`}>
+            {sections.map(({ cat, items }) => (
+              <section key={cat.id} className="section" aria-labelledby={`sec-${cat.id}`}>
+                <h2 id={`sec-${cat.id}`} className="section-head">
+                  <span className="section-no" aria-hidden="true">{CN_NUM[cat.id - 1]}</span>
+                  <span className="section-name">{cat.name}</span>
+                  <span className="section-range">{cat.range}</span>
+                </h2>
+                <ol className="rows">
+                  {items.map(cmd => {
+                    const isOpen = expandedId === cmd.id;
+                    const justCopied = copiedId === cmd.id;
+                    const wasCopied = copiedIds.includes(cmd.id);
+                    return (
+                      <li key={cmd.id} id={`prompt-row-${cmd.id}`} className={`row ${isOpen ? "is-open" : ""}`}>
+                        <div className="row-line">
+                          <button
+                            type="button"
+                            className="row-main"
+                            onClick={() => toggleExpanded(cmd.id)}
+                            aria-expanded={isOpen}
+                            aria-controls={`prompt-template-${cmd.id}`}
+                          >
+                            <span className="row-no">
+                              {cmd.id}
+                              {wasCopied && (
+                                <svg className="circle" viewBox="0 0 44 32" aria-hidden="true">
+                                  <path d="M30 4.5C20 1.8 5.5 5 3.6 14.6 2 23.5 13 29 24.5 27.6 35.5 26.3 42 19.6 40.4 12.2 39 6 31 3.4 22 4" />
+                                </svg>
+                              )}
+                            </span>
+                            <span className="row-text">
+                              <span className="row-title">{cmd.title}</span>
+                              <span className="row-slash">{cmd.slash}{wasCopied && <span className="sr-only">，已點過</span>}</span>
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            className={`box ${justCopied ? "is-ticked" : ""}`}
+                            onClick={() => handleCopy(cmd)}
+                            aria-label={`複製「${cmd.title}」模板`}
+                          >
+                            {justCopied ? Icon.tick : Icon.copy}
+                          </button>
+                        </div>
+
+                        {isOpen && (
+                          <div id={`prompt-template-${cmd.id}`} className="ticket">
+                            <p className="ticket-note"><span className="blank">【】</span> 框起來的地方，換成你自己的內容</p>
+                            <div className="ticket-body">{renderTemplate(cmd.template)}</div>
+                            <div className="ticket-actions">
+                              <button type="button" className="btn-ink" onClick={() => handleCopy(cmd)}>
+                                {justCopied ? "已複製" : "複製這道模板"}
+                              </button>
+                              <button type="button" className="btn-line" onClick={() => toggleExpanded(cmd.id)}>收合</button>
+                            </div>
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ol>
+              </section>
+            ))}
+          </div>
+        )}
+
+        <aside className="notice">
+          <h2 className="notice-title">如何使用最有效？</h2>
+          <ol className="notice-steps">
+            <li>先搜尋你的場景，或點上方分類</li>
+            <li>點指令名稱，展開完整模板</li>
+            <li>按右邊的方格，一鍵複製</li>
+            <li>把【】替換成你的內容</li>
+            <li>貼到 ChatGPT</li>
+          </ol>
+          <p className="notice-tip">小技巧：把常用指令釘選在 ChatGPT 的自訂指令裡，可減少重複輸入時間。</p>
+          <p className="colophon">Made for zh-TW · 100 prompts</p>
+        </aside>
+      </main>
+
+      <div className="toast-dock" aria-live="polite">
+        {toast && (
+          <div className={`slip ${toast.ok ? "" : "is-error"}`} role={toast.ok ? "status" : "alert"}>
+            <span className="slip-msg">{toast.msg}</span>
+            <span className="slip-hint">{toast.hint}</span>
+          </div>
+        )}
       </div>
     </div>
   );

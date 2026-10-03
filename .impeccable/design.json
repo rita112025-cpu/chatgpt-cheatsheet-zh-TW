@@ -1,0 +1,399 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-01T09:47:51+00:00",
+  "title": "Design System: 100個最好用的 ChatGPT 指令大全",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Pale Woodfree Green",
+        "canonical": "#e4efe0",
+        "tonalRamp": [
+          "#21321a",
+          "#39592e",
+          "#527f42",
+          "#6ba656",
+          "#8cbb7b",
+          "#adcfa1",
+          "#cfe2c8",
+          "#f0f6ee"
+        ]
+      },
+      "paper-deep": {
+        "role": "neutral",
+        "displayName": "Deep Woodfree Green",
+        "canonical": "#d5e5cf",
+        "tonalRamp": [
+          "#21321b",
+          "#3a572f",
+          "#537d44",
+          "#6da358",
+          "#8db97d",
+          "#aecda3",
+          "#cfe2c9",
+          "#f1f6ee"
+        ]
+      },
+      "ink": {
+        "role": "primary",
+        "displayName": "Printing Blue",
+        "canonical": "#1b3796",
+        "tonalRamp": [
+          "#0c1841",
+          "#152a72",
+          "#1d3ca4",
+          "#264ed5",
+          "#5575e0",
+          "#879de9",
+          "#b8c5f2",
+          "#e9edfb"
+        ]
+      },
+      "ink-soft": {
+        "role": "primary",
+        "displayName": "Muted Plate Blue",
+        "canonical": "#4a5a96",
+        "tonalRamp": [
+          "#191f33",
+          "#2d365a",
+          "#404e81",
+          "#5365a8",
+          "#7987bd",
+          "#a0aad0",
+          "#c7cde3",
+          "#eef0f7"
+        ]
+      },
+      "pencil": {
+        "role": "neutral",
+        "displayName": "Pencil Grey",
+        "canonical": "#5b5a55",
+        "tonalRamp": [
+          "#282725",
+          "#464541",
+          "#64635d",
+          "#828179",
+          "#9e9d97",
+          "#babab6",
+          "#d7d6d4",
+          "#f3f3f2"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline Rule",
+        "canonical": "rgb(27 55 150 / 0.28)"
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Strong Rule",
+        "canonical": "rgb(27 55 150 / 0.75)"
+      },
+      "on-ink": {
+        "role": "neutral",
+        "displayName": "On-Ink Paper",
+        "canonical": "#e4efe0",
+        "tonalRamp": [
+          "#21321a",
+          "#39592e",
+          "#527f42",
+          "#6ba656",
+          "#8cbb7b",
+          "#adcfa1",
+          "#cfe2c8",
+          "#f0f6ee"
+        ]
+      },
+      "reverse-paper": {
+        "role": "neutral",
+        "displayName": "Reverse Paper (dark)",
+        "canonical": "#172f80",
+        "tonalRamp": [
+          "#0c1841",
+          "#152a72",
+          "#1d3ca4",
+          "#264ed5",
+          "#5575e0",
+          "#879de9",
+          "#b8c5f2",
+          "#e9edfb"
+        ]
+      },
+      "reverse-paper-deep": {
+        "role": "neutral",
+        "displayName": "Reverse Paper Deep (dark)",
+        "canonical": "#1d3789",
+        "tonalRamp": [
+          "#0d193f",
+          "#182d6f",
+          "#22409f",
+          "#2c53cf",
+          "#5a79dc",
+          "#8aa0e6",
+          "#bac7f0",
+          "#eaeefb"
+        ]
+      },
+      "reverse-ink": {
+        "role": "primary",
+        "displayName": "Reverse Ink (dark)",
+        "canonical": "#d6ead1",
+        "tonalRamp": [
+          "#1e3518",
+          "#345d2a",
+          "#4b853d",
+          "#62ad4f",
+          "#84c075",
+          "#a8d29d",
+          "#cce5c5",
+          "#eff7ed"
+        ]
+      },
+      "reverse-ink-soft": {
+        "role": "primary",
+        "displayName": "Reverse Ink Soft (dark)",
+        "canonical": "#a9bbe3",
+        "tonalRamp": [
+          "#131f3a",
+          "#213666",
+          "#2f4e92",
+          "#3e65be",
+          "#6887ce",
+          "#94aadc",
+          "#c0cdea",
+          "#ecf0f9"
+        ]
+      },
+      "reverse-pencil": {
+        "role": "neutral",
+        "displayName": "Reverse Pencil (dark)",
+        "canonical": "#c4c3bb",
+        "tonalRamp": [
+          "#292824",
+          "#48473f",
+          "#67665a",
+          "#878575",
+          "#a2a094",
+          "#bdbcb3",
+          "#d8d7d2",
+          "#f3f3f1"
+        ]
+      },
+      "reverse-rule": {
+        "role": "neutral",
+        "displayName": "Reverse Hairline (dark)",
+        "canonical": "rgb(214 234 209 / 0.22)"
+      },
+      "reverse-rule-strong": {
+        "role": "neutral",
+        "displayName": "Reverse Strong Rule (dark)",
+        "canonical": "rgb(214 234 209 / 0.7)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Masthead title only; 21px, 32px at >=640px, 40px at >=1024px."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section names beside the 20px CJK section numeral; notice and empty-state titles at 17-18px; slip message at 15px."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Prompt names in menu rows."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Template text in the ticket, max 68ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Index tabs; ranges and tallies at 12-13px in ink-soft."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Row numbers in the 4.4ch column; the seal's 100 at 700."
+      },
+      "command": {
+        "displayName": "Command",
+        "purpose": "Slash command names only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "seal-ring",
+        "value": "inset 0 0 0 3px var(--paper), inset 0 0 0 4px var(--ink)",
+        "purpose": "Draws the seal's inner printed ring; linework, not elevation. The only box-shadow in the system."
+      }
+    ],
+    "motion": [
+      {
+        "name": "pencil-tick",
+        "value": "0.22s steps(4, end)",
+        "purpose": "Dashed-stroke draw of the tick in a copied box; disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "slip-in",
+        "value": "0.18s steps(3, end)",
+        "purpose": "Slip enters from translateY(10px) with no opacity fade; disabled under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "sheet-2col",
+        "value": "900px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "sheet-3col",
+        "value": "1240px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Inked Button",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "Primary action (copy template, clear filters): solid spot ink, square.",
+      "html": "<button class=\"ds-btn-ink\">複製模板</button>",
+      "css": ":host{--ink:#1b3796;--ink-soft:#4a5a96;--paper:#e4efe0;--paper-deep:#d5e5cf;--pencil:#5b5a55;--on-ink:#e4efe0;--rule:rgb(27 55 150/.28);--rule-strong:rgb(27 55 150/.75);--font-text:'Barlow',-apple-system,'PingFang TC','Microsoft JhengHei','Heiti TC',sans-serif;--font-display:'Noto Sans TC',-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif}.ds-btn-ink{min-height:44px;padding:0 18px;font-family:var(--font-text);font-size:15px;font-weight:700;border:1.5px solid var(--ink);background:var(--ink);color:var(--on-ink);border-radius:0;cursor:pointer}.ds-btn-ink:hover{background:var(--ink-soft);border-color:var(--ink-soft)}.ds-btn-ink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}"
+    },
+    {
+      "name": "Line Button",
+      "kind": "button",
+      "refersTo": "button-line",
+      "description": "Secondary action (collapse): ink outline on transparent.",
+      "html": "<button class=\"ds-btn-line\">收合</button>",
+      "css": ":host{--ink:#1b3796;--ink-soft:#4a5a96;--paper:#e4efe0;--paper-deep:#d5e5cf;--pencil:#5b5a55;--on-ink:#e4efe0;--rule:rgb(27 55 150/.28);--rule-strong:rgb(27 55 150/.75);--font-text:'Barlow',-apple-system,'PingFang TC','Microsoft JhengHei','Heiti TC',sans-serif;--font-display:'Noto Sans TC',-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif}.ds-btn-line{min-height:44px;padding:0 18px;font-family:var(--font-text);font-size:15px;font-weight:700;border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:0;cursor:pointer}.ds-btn-line:hover{background:var(--paper)}.ds-btn-line:focus-visible{outline:2px solid var(--ink);outline-offset:2px}"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "search-input",
+      "description": "Keyword or number search; square ruled frame, 48px tall, 16px text on mobile.",
+      "html": "<label class=\"ds-search\"><svg viewBox=\"0 0 20 20\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><circle cx=\"8.5\" cy=\"8.5\" r=\"5.5\"/><path d=\"M12.6 12.6 17 17\" stroke-linecap=\"square\"/></svg><input type=\"search\" placeholder=\"搜尋指令，或輸入編號\"></label>",
+      "css": ":host{--ink:#1b3796;--ink-soft:#4a5a96;--paper:#e4efe0;--paper-deep:#d5e5cf;--pencil:#5b5a55;--on-ink:#e4efe0;--rule:rgb(27 55 150/.28);--rule-strong:rgb(27 55 150/.75);--font-text:'Barlow',-apple-system,'PingFang TC','Microsoft JhengHei','Heiti TC',sans-serif;--font-display:'Noto Sans TC',-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif}.ds-search{position:relative;display:flex;align-items:center;border:1px solid var(--rule-strong);background:var(--paper)}.ds-search svg{position:absolute;left:14px;color:var(--ink-soft);pointer-events:none}.ds-search input{width:100%;min-height:48px;padding:0 16px 0 44px;font-size:16px;font-family:var(--font-text);background:transparent;color:var(--ink);border:0;outline:none}.ds-search input::placeholder{color:var(--ink-soft);opacity:1}.ds-search:focus-within{outline:2px solid var(--ink);outline-offset:1px}"
+    },
+    {
+      "name": "Section Index",
+      "kind": "nav",
+      "refersTo": "index-tab",
+      "description": "Merged strip of square tabs with tabular number ranges; the selected tab prints solid ink.",
+      "html": "<nav class=\"ds-index\"><button class=\"ds-tab\" aria-pressed=\"true\">全部<span>1–100</span></button><button class=\"ds-tab\" aria-pressed=\"false\">寫作<span>1–10</span></button><button class=\"ds-tab\" aria-pressed=\"false\">工作<span>11–20</span></button></nav>",
+      "css": ":host{--ink:#1b3796;--ink-soft:#4a5a96;--paper:#e4efe0;--paper-deep:#d5e5cf;--pencil:#5b5a55;--on-ink:#e4efe0;--rule:rgb(27 55 150/.28);--rule-strong:rgb(27 55 150/.75);--font-text:'Barlow',-apple-system,'PingFang TC','Microsoft JhengHei','Heiti TC',sans-serif;--font-display:'Noto Sans TC',-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif}.ds-index{display:flex;flex-wrap:wrap}.ds-tab{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;font-family:var(--font-text);font-size:14px;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--rule-strong);margin-right:-1px;border-radius:0;cursor:pointer}.ds-tab span{font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums}.ds-tab:hover{background:var(--paper-deep)}.ds-tab[aria-pressed=true]{background:var(--ink);color:var(--on-ink);position:relative;z-index:1}.ds-tab[aria-pressed=true] span{color:var(--on-ink);opacity:.85}.ds-tab:focus-visible{outline:2px solid var(--ink);outline-offset:2px}"
+    },
+    {
+      "name": "Menu Row",
+      "kind": "custom",
+      "refersTo": "tick-box",
+      "description": "Signature: double-ruled section head over numbered ruled rows with title, slash name and 44px tick box; a copied row number carries the pencil circle.",
+      "html": "<div class=\"ds-section-head\"><span class=\"ds-no\">一</span><span class=\"ds-name\">寫作</span><span class=\"ds-range\">1–10</span></div><div class=\"ds-row\"><button class=\"ds-row-main\"><span class=\"ds-row-no\">7<svg viewBox=\"0 0 44 32\" aria-hidden=\"true\"><path d=\"M30 4.5C20 1.8 5.5 5 3.6 14.6 2 23.5 13 29 24.5 27.6 35.5 26.3 42 19.6 40.4 12.2 39 6 31 3.4 22 4\"/></svg></span><span class=\"ds-row-text\"><span class=\"ds-row-title\">文章潤飾</span><span class=\"ds-row-slash\">/polish_text</span></span></button><button class=\"ds-box\" aria-label=\"複製\"><svg viewBox=\"0 0 20 20\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><rect x=\"6.5\" y=\"6.5\" width=\"9\" height=\"10\"/><path d=\"M4 13.5V3.5h8.5\"/></svg></button></div>",
+      "css": ":host{--ink:#1b3796;--ink-soft:#4a5a96;--paper:#e4efe0;--paper-deep:#d5e5cf;--pencil:#5b5a55;--on-ink:#e4efe0;--rule:rgb(27 55 150/.28);--rule-strong:rgb(27 55 150/.75);--font-text:'Barlow',-apple-system,'PingFang TC','Microsoft JhengHei','Heiti TC',sans-serif;--font-display:'Noto Sans TC',-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif}.ds-section-head{display:flex;align-items:baseline;gap:10px;padding:10px 0 8px;border-top:3px double var(--rule-strong);border-bottom:1px solid var(--rule-strong);font-family:var(--font-display);color:var(--ink)}.ds-no{font-weight:900;font-size:20px;line-height:1}.ds-name{font-weight:900;font-size:18px;letter-spacing:.04em}.ds-range{margin-left:auto;font-family:var(--font-text);font-size:13px;font-weight:500;color:var(--ink-soft);font-variant-numeric:tabular-nums}.ds-row{display:flex;border-bottom:1px solid var(--rule)}.ds-row-main{flex:1;min-width:0;display:grid;grid-template-columns:4.4ch 1fr;gap:8px;align-items:center;min-height:60px;padding:8px 8px 8px 2px;text-align:left;background:none;border:0;color:var(--ink);font-family:var(--font-text);cursor:pointer}.ds-row-main:hover .ds-row-title{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}.ds-row-main:focus-visible{outline:2px solid var(--ink);outline-offset:2px}.ds-row-no{position:relative;justify-self:center;font-weight:600;font-size:15px;font-variant-numeric:tabular-nums}.ds-row-no svg{position:absolute;left:50%;top:50%;width:34px;height:26px;transform:translate(-50%,-52%) rotate(-6deg);fill:none;stroke:var(--pencil);stroke-width:1.6;stroke-linecap:round}.ds-row-text{display:flex;flex-direction:column;gap:2px;min-width:0}.ds-row-title{font-weight:700;font-size:16px;line-height:1.4}.ds-row-slash{font-family:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;font-size:12.5px;color:var(--ink-soft)}.ds-box{flex:none;align-self:center;width:44px;height:44px;display:grid;place-items:center;border:1.5px solid var(--ink);color:var(--ink);background:transparent;border-radius:0;cursor:pointer}.ds-box:hover{background:var(--paper-deep)}.ds-box:focus-visible{outline:2px solid var(--ink);outline-offset:2px}"
+    },
+    {
+      "name": "Ticket",
+      "kind": "card",
+      "refersTo": "ticket",
+      "description": "Expanded template: tinted tear-off panel with dashed top rule and printed 【】 blanks.",
+      "html": "<div class=\"ds-ticket\"><p class=\"ds-ticket-body\">請幫我把以下文章改寫成<span class=\"ds-blank\">【目標讀者】</span>看得懂的版本：<span class=\"ds-blank\">【貼上文章】</span></p></div>",
+      "css": ":host{--ink:#1b3796;--ink-soft:#4a5a96;--paper:#e4efe0;--paper-deep:#d5e5cf;--pencil:#5b5a55;--on-ink:#e4efe0;--rule:rgb(27 55 150/.28);--rule-strong:rgb(27 55 150/.75);--font-text:'Barlow',-apple-system,'PingFang TC','Microsoft JhengHei','Heiti TC',sans-serif;--font-display:'Noto Sans TC',-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif}.ds-ticket{padding:14px 14px 16px;background:var(--paper-deep);border-top:1px dashed var(--rule-strong);color:var(--ink);font-family:var(--font-text);}.ds-ticket-body{margin:0;white-space:pre-wrap;font-size:15px;line-height:1.75;max-width:68ch}.ds-blank{font-weight:700;border-bottom:1.5px solid var(--ink);background:var(--paper);padding:0 2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}"
+    },
+    {
+      "name": "Slip",
+      "kind": "custom",
+      "refersTo": "slip",
+      "description": "Copy feedback slip with a printed double frame; the error variant prints in reverse ink.",
+      "html": "<div class=\"ds-slip\"><span class=\"ds-slip-msg\">已複製 /polish_text</span><span class=\"ds-slip-hint\">到 ChatGPT 貼上，再把【】換成你的內容</span></div><div class=\"ds-slip ds-slip-error\"><span class=\"ds-slip-msg\">複製失敗</span><span class=\"ds-slip-hint\">請手動選取模板文字</span></div>",
+      "css": ":host{--ink:#1b3796;--ink-soft:#4a5a96;--paper:#e4efe0;--paper-deep:#d5e5cf;--pencil:#5b5a55;--on-ink:#e4efe0;--rule:rgb(27 55 150/.28);--rule-strong:rgb(27 55 150/.75);--font-text:'Barlow',-apple-system,'PingFang TC','Microsoft JhengHei','Heiti TC',sans-serif;--font-display:'Noto Sans TC',-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif}.ds-slip{display:inline-flex;flex-direction:column;gap:2px;margin:8px;padding:12px 18px;background:var(--paper);color:var(--ink);border:1.5px solid var(--ink);outline:1px solid var(--ink);outline-offset:3px;font-family:var(--font-text);animation:ds-slip-in .18s steps(3,end)}.ds-slip-error{background:var(--ink);color:var(--on-ink)}.ds-slip-msg{font-family:var(--font-display);font-weight:900;font-size:15px}.ds-slip-hint{font-size:13px;opacity:.85}@keyframes ds-slip-in{from{transform:translateY(10px)}to{transform:none}}@media (prefers-reduced-motion:reduce){.ds-slip{animation:none}}"
+    },
+    {
+      "name": "Seal",
+      "kind": "custom",
+      "description": "The 100 stamp in the masthead: the system's only round form; its inner ring is inset linework.",
+      "html": "<div class=\"ds-seal\" aria-hidden=\"true\"><span class=\"ds-seal-num\">100</span><span class=\"ds-seal-unit\">道</span></div>",
+      "css": ":host{--ink:#1b3796;--ink-soft:#4a5a96;--paper:#e4efe0;--paper-deep:#d5e5cf;--pencil:#5b5a55;--on-ink:#e4efe0;--rule:rgb(27 55 150/.28);--rule-strong:rgb(27 55 150/.75);--font-text:'Barlow',-apple-system,'PingFang TC','Microsoft JhengHei','Heiti TC',sans-serif;--font-display:'Noto Sans TC',-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif}.ds-seal{width:76px;height:76px;border:2px solid var(--ink);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;color:var(--ink);box-shadow:inset 0 0 0 3px var(--paper),inset 0 0 0 4px var(--ink)}.ds-seal-num{font-family:var(--font-text);font-weight:700;font-size:25px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.ds-seal-unit{font-family:var(--font-display);font-weight:900;font-size:13px;margin-top:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "點菜單 (The Single-Spot Order Menu)",
+    "overview": "The whole site is a Taiwanese printed order menu: pale-green woodfree paper, one printing-blue spot ink for every line, letter and box, and a grey pencil for the diner's marks. The hundred prompts are dishes. They sit in numbered sections under double-rule heads, each one a ruled table row (number, name with its slash command, tick box). Ticking the box copies the template. The pencil then ticks the box and circles the row number, so a returning visitor can see what they ordered last time.\n\nThe page is dense like a real menu, not like a gallery: hairline-ruled rows, tabular numerals, at least four rows in the first mobile viewport, and two or three continuous columns on desktop. Depth comes from print devices only (double rules, a tinted tear-off ticket, a double-ringed seal), never from light. Dark mode is a reverse print. The paper becomes the blue and the ink becomes the pale green, so it is still one colour on one stock.\n\nConfirmed rejection: the generic \"rounded card grid + purple accent + category sidebar\" layout.",
+    "keyCharacteristics": [
+      "One spot colour (ink) on one paper; pencil grey is the only other mark, and it is reserved for the user's ticks.",
+      "Square corners everywhere except the circular 100 seal.",
+      "Ruled table rows with a fixed numeral column, not cards.",
+      "Section heads framed by a 3px double rule above and a 1px rule below.",
+      "Motion in printed steps (`steps()`), never fades."
+    ],
+    "rules": [
+      {
+        "name": "The One Spot Rule",
+        "body": "Ink is the only colour. Hierarchy comes from ink-soft, the rule alphas, weight and paper-deep, never from a second hue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Pencil Belongs to the Diner Rule",
+        "body": "Pencil grey marks only what the user did (copied, ticked, already ordered). It is never used for system chrome.",
+        "section": "colors"
+      },
+      {
+        "name": "The Reverse Print Rule",
+        "body": "Dark mode inverts paper and ink. It does not introduce a neutral grey or black surface.",
+        "section": "colors"
+      },
+      {
+        "name": "The Inverse Error Rule",
+        "body": "A failure is shown as the same slip printed in reverse (ink fill, on-ink text) with plain words. No red.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Every number (row number, ranges, tally, seal, notice step counters) uses `font-variant-numeric: tabular-nums` so the columns line up like a printed price list.",
+        "section": "typography"
+      },
+      {
+        "name": "The 900-Only Display Rule",
+        "body": "Noto Sans TC is loaded at 900 alone. Display text is either 900 or set in the text stack, never at an intermediate Noto weight.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono Is For Commands Rule",
+        "body": "Monospace appears only for slash command names.",
+        "section": "typography"
+      },
+      {
+        "name": "The 44 Rule",
+        "body": "Every interactive target is at least 44px (tabs, boxes, buttons, the clear button and the \"已點過\" clear link). The search field is 48px tall and its text is 16px below 640px, so iOS does not zoom.",
+        "section": "layout"
+      },
+      {
+        "name": "The Printed Frame Rule",
+        "body": "To set something apart, print another line (double rule, offset outline, dashed tear). Never lift it with shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** draw everything in the single ink (`var(--ink)`) and its rule alphas on paper, and swap both in dark mode.",
+      "**Do** keep a 4.4ch tabular numeral column and hairline-ruled rows for any list of items.",
+      "**Do** separate regions with a 3px double rule over a 1px strong rule.",
+      "**Do** keep every target at least 44px and the mobile search text at 16px.",
+      "**Do** step motion with `steps()` and disable it under `prefers-reduced-motion`.",
+      "**Do** print 【】 blanks as bold ink on paper with a 1.5px underline wherever template text appears."
+    ],
+    "donts": [
+      "**Don't** introduce a second hue, including for error or success states. Errors print in inverse ink.",
+      "**Don't** use drop shadows, gradients, blur or rounded cards. The seal's inset ring is the one sanctioned `box-shadow`.",
+      "**Don't** use pencil grey for anything the user didn't do.",
+      "**Don't** load more Noto Sans TC weights or use monospace beyond slash command names.",
+      "**Don't** fade states in. Toggle them in two frames or in printed steps."
+    ]
+  }
+}

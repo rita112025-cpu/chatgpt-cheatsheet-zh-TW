@@ -1512,7 +1512,10 @@ export default function App() {
           <h1 className="title">
             <span className="whitespace-nowrap">100個最好用的</span> <span className="whitespace-nowrap">ChatGPT 指令大全</span>
           </h1>
-          <p className="subtitle">分類搜尋 · 一鍵複製 · 直接貼上就能用</p>
+          {/* 每個詞組不拆開，窄螢幕只在「·」之間換行 */}
+          <p className="subtitle">
+            <span className="whitespace-nowrap">分類搜尋 ·</span> <span className="whitespace-nowrap">一鍵複製 ·</span> <span className="whitespace-nowrap">直接貼上就能用</span>
+          </p>
         </div>
         <button
           type="button"
